@@ -85,6 +85,8 @@ class _HomeState extends State<Home> {
     highlightColor: ColorSet.transparent,
   );
 
+  final FocusNode focusNode = FocusNode();
+
   @override
   void initState() {
     Get.put(ImageExplanationController(),permanent: true);
@@ -173,7 +175,7 @@ class _HomeState extends State<Home> {
       drawer: drawer(),
       body: GestureDetector(
         onTap: (){
-          FocusScope.of(context).unfocus();
+          focusNode.unfocus();
         },
         child: Padding(
           padding: const EdgeInsets.all(12),
@@ -293,6 +295,7 @@ class _HomeState extends State<Home> {
           Expanded(child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 8),
             child: TextField(
+              focusNode: focusNode,
               controller: explanationEditor,
               expands: true,
               maxLines: null,
