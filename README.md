@@ -1,16 +1,11 @@
 # fantastic_image_gallery
 
-fantastic gallery images using ai
+This repo is AI Image Gallery. You can make your custom image using AI or You can see various generated images made by AI.
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+1. you have to have api key https://openai.com/
 
-A few resources to get you started if this is your first Flutter project:
+2. you have to add your api key in env.g.dart file
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+3. run this project
