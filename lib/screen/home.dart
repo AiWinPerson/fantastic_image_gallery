@@ -76,14 +76,18 @@ class _HomeState extends State<Home> {
     ImageStylePath.sketchStyles,
   ];
 
-  ImageExplanationController explanationController = Get.put(ImageExplanationController());
-
   final TextEditingController explanationEditor = TextEditingController();
 
   final SizedBox spacer = const SizedBox(height: 20,);
 
+  final ButtonStyle buttonStyle = IconButton.styleFrom(
+    splashFactory: NoSplash.splashFactory,
+    highlightColor: ColorSet.transparent,
+  );
+
   @override
   void initState() {
+    Get.put(ImageExplanationController(),permanent: true);
     Get.put(UserGalleryController(),permanent: true);
     super.initState();
   }
@@ -118,8 +122,8 @@ class _HomeState extends State<Home> {
               ),
             ),
             spacer,
-            ...List.generate(explanationController.records.length, (index) {
-              ExplanationInfo record = explanationController.records[index];
+            ...List.generate(ImageExplanationController.to.records.length, (index) {
+              ExplanationInfo record = ImageExplanationController.to.records[index];
               return Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -140,8 +144,8 @@ class _HomeState extends State<Home> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
-                            IconButton(onPressed: () => explanationController.removeRecord(record.writtenDate), icon: const Icon(Icons.delete_outline_rounded,size: 30,color: ColorSet.apricot,)),
-                            IconButton(onPressed: () {
+                            IconButton(style: buttonStyle,onPressed: () => ImageExplanationController.to.removeRecord(record.writtenDate), icon: const Icon(Icons.delete_outline_rounded,size: 30,color: ColorSet.apricot,)),
+                            IconButton(style: buttonStyle,onPressed: () {
                               Clipboard.setData(ClipboardData(text: record.explanation));
                               Fluttertoast.showToast(msg: "클립보드에 복사되었어요.",gravity: ToastGravity.BOTTOM,backgroundColor: ColorSet.blackShade300);
                             }, icon: const Icon(Icons.my_library_books_outlined,size: 25,color: ColorSet.whiteOpacity800,)),
@@ -167,28 +171,33 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: drawer(),
-      body: Padding(
-        padding: const EdgeInsets.all(12),
-        child: CustomScrollView(
-          slivers: [
-            const SliverToBoxAdapter(
-              child: MenuIcon(),
-            ),
-            SliverToBoxAdapter(
-              child: spacer,
-            ),
-            SliverToBoxAdapter(
-              child: typingWithBot(),
-            ),
-            const SliverPadding(
-              padding: EdgeInsets.symmetric(vertical: 15.0),
-              sliver: SliverToBoxAdapter(
-                child: Text("Style",style: TextStyle(color: ColorSet.white,fontSize: 17,fontWeight: FontWeight.w400),),
-              )
-            ),
-            imageStyleList(),
-          ],
-        )
+      body: GestureDetector(
+        onTap: (){
+          FocusScope.of(context).unfocus();
+        },
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: CustomScrollView(
+            slivers: [
+              const SliverToBoxAdapter(
+                child: MenuIcon(),
+              ),
+              SliverToBoxAdapter(
+                child: spacer,
+              ),
+              SliverToBoxAdapter(
+                child: typingWithBot(),
+              ),
+              const SliverPadding(
+                padding: EdgeInsets.symmetric(vertical: 15.0),
+                sliver: SliverToBoxAdapter(
+                  child: Text("Style",style: TextStyle(color: ColorSet.white,fontSize: 17,fontWeight: FontWeight.w400),),
+                )
+              ),
+              imageStyleList(),
+            ],
+          )
+        ),
       ),
     );
   }
@@ -290,7 +299,7 @@ class _HomeState extends State<Home> {
               minLines: null,
               textAlign: TextAlign.start,
               onChanged: (value){
-                explanationController.explanationSetter = value;
+                ImageExplanationController.to.explanationSetter = value;
               },
               textAlignVertical: TextAlignVertical.top,
               decoration: InputDecoration(
@@ -309,21 +318,21 @@ class _HomeState extends State<Home> {
                         alignment: Alignment.bottomRight,
                         child: IconButton(
                             onPressed: ()async{
-                              await Get.to(() => ImageCreation(prompt: explanationController.currentExplanation.value));
-                              explanationController.addExplanation();
-                              explanationController.explanationSetter = "";
+                              ImageExplanationController.to.addExplanation(explanationEditor.text);
+                              await Get.to(() => ImageCreation(prompt: explanationEditor.text));
+                              ImageExplanationController.to.explanationSetter = "";
                               explanationEditor.text = "";
                             },
                             icon: const HugeIcon(icon: HugeIcons.strokeRoundedRobotic, color: ColorSet.violet300)
                         ),
                       ),
                     ),
-                    if(explanationController.currentExplanation.isNotEmpty) ...[
+                    if(ImageExplanationController.to.currentExplanation.isNotEmpty) ...[
                       const SizedBox(width: 10,),
                       IconButton(
                           onPressed: (){
                             explanationEditor.text = "";
-                            explanationController.explanationSetter = "";
+                            ImageExplanationController.to.explanationSetter = "";
                             },
                           icon: const Icon(Icons.close,color: ColorSet.violet300,
                           )

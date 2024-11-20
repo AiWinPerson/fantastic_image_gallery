@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import '../model/explanation_info.dart';
 
 class ImageExplanationController extends GetxController{
+  static final ImageExplanationController to = Get.find<ImageExplanationController>();
   final RxString _currentExplanation = "".obs;
   final RxList<ExplanationInfo> _records = <ExplanationInfo>[].obs;
 
@@ -11,8 +12,8 @@ class ImageExplanationController extends GetxController{
 
   set explanationSetter(String value) => _currentExplanation.value = value;
 
-  void addExplanation(){
-    _records.add(ExplanationInfo(explanation: _currentExplanation.value));
+  void addExplanation([String? text]){
+    _records.add(ExplanationInfo(explanation: text?? _currentExplanation.value));
     _records.refresh();
   }
 

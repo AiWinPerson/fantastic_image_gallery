@@ -17,7 +17,9 @@ class MenuIcon extends StatelessWidget {
                 tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                 minimumSize: Size.zero,
               ),
-              onPressed: ()=>Scaffold.of(context).openDrawer(),
+              onPressed: (){
+                Scaffold.of(context).openDrawer();
+              },
               icon: const Icon(Icons.menu)
           ),),
           const Spacer(),
